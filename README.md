@@ -46,11 +46,7 @@ sbt:converter> test
 ```
 
 ### How to run open the coverage report
-* With an open interactive session in sbt, run the following commands in sequence
-  * coverage
-  * test
-  * coverageReport
-  * coverageOff
+* With an open interactive session in sbt, run the following `fullCoverage`
 * This will print out the location of the html file, which can be opened with any http client
 ```
 sbt:converter> coverageReport
@@ -61,7 +57,7 @@ sbt:converter> coverageReport
 [info] Written Cobertura report [converter/target/scala-2.13/coverage-report/cobertura.xml]
 [info] Written XML coverage report [converter/target/scala-2.13/scoverage-report/scoverage.xml]
 [info] Written HTML coverage report [converter/target/scala-2.13/scoverage-report/index.html]
-[info] Statement coverage.: 87.84%
+[info] Statement coverage.: 92.59%
 [info] Branch coverage....: 100.00%
 [info] Coverage reports completed
 [success] Total time: 1 s, completed 03-Jun-2020 01:02:21

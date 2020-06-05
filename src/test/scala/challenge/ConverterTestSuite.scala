@@ -20,7 +20,7 @@ class ConverterTestSuite extends AnyFunSuite {
       ("90:00", Invalid.invalid),
       ("[H3] 90:00.000", Invalid.invalid),
       ("[PM] -10:00.000", Invalid.invalid),
-      ("FOO", Invalid.invalid),
+      ("FOO", Invalid.invalid)
     )
 
     forAll(table) { (input: String, output: String) =>
@@ -32,17 +32,17 @@ class ConverterTestSuite extends AnyFunSuite {
     val table = Table(
       ("input", "output"),
       ("[PM] 0:00.000", MatchTime("PM", "0", "0", "0")),
-      ("[H1] 0:15.025", MatchTime("H1",   "0", "15", "25")),
-      ("[H1] 3:07.513", MatchTime("H1",   "3",  "7", "513")),
-      ("[H1] 45:00.001", MatchTime("H1",  "45", "0", "1")),
-      ("[H1] 46:15.752", MatchTime("H1",  "46", "15", "752")),
-      ("[HT] 45:00.000", MatchTime("HT",  "45", "0", "0")),
-      ("[H2] 45:00.500", MatchTime("H2",  "45", "0", "500")),
-      ("[H2] 90:00.908", MatchTime("H2",  "90", "0", "908")),
-      ("[FT] 90:00.000", MatchTime("FT",  "90", "0", "0")),
+      ("[H1] 0:15.025", MatchTime("H1", "0", "15", "25")),
+      ("[H1] 3:07.513", MatchTime("H1", "3", "7", "513")),
+      ("[H1] 45:00.001", MatchTime("H1", "45", "0", "1")),
+      ("[H1] 46:15.752", MatchTime("H1", "46", "15", "752")),
+      ("[HT] 45:00.000", MatchTime("HT", "45", "0", "0")),
+      ("[H2] 45:00.500", MatchTime("H2", "45", "0", "500")),
+      ("[H2] 90:00.908", MatchTime("H2", "90", "0", "908")),
+      ("[FT] 90:00.000", MatchTime("FT", "90", "0", "0")),
       ("90:00", Left("90:00")),
       ("[H3] 90:00.000", Left("H3 is an Unsupported Period Format")),
-      ("[PM] -10:00.000", Left("Minutes values are >= 0 and <= 120")),
+      ("[PM] -10:00.000", Left(Minutes.creationImpossible)),
       ("FOO", Left("FOO"))
     )
 
@@ -52,16 +52,19 @@ class ConverterTestSuite extends AnyFunSuite {
   }
 
   test("domain representations, error messages should be returned on invalid inputs") {
-    assert(Seconds(67) === Left("Seconds values are >= 0 and <= 60"))
-    assert(Seconds("-67") === Left("Seconds values are >= 0 and <= 60"))
-    assert(Minutes("-67") === Left("Minutes values are >= 0 and <= 120"))
-    assert(Minutes("-167") === Left("Minutes values are >= 0 and <= 120"))
-    assert(MilliSeconds("-67") === Left("MilliSeconds values are >= 0 and <= 999"))
-    assert(MilliSeconds("1000") === Left("MilliSeconds values are >= 0 and <= 999"))
+    val invalidSecondInt    = 67
+    val invalidSecondString = "-67"
+    assert(Seconds(invalidSecondInt) === Left(Seconds.creationImpossible))
+    assert(Seconds(invalidSecondString) === Left(Seconds.creationImpossible))
+    assert(Minutes(invalidSecondString) === Left(Minutes.creationImpossible))
+    assert(Minutes("-167") === Left(Minutes.creationImpossible))
+    assert(MilliSeconds(invalidSecondString) === Left(MilliSeconds.creationImpossible))
+    assert(MilliSeconds("1000") === Left(MilliSeconds.creationImpossible))
   }
 
   test("parseInt") {
-    assert(parseInt("123") === Right(123))
+    val i = 123
+    assert(parseInt("123") === Right(i))
     assert(parseInt("asdf").isLeft)
   }
 
