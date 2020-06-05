@@ -1,5 +1,6 @@
 ## Match Time Converter
 
+[![Build Status](https://travis-ci.org/gustavofranke/converter.svg?branch)](https://travis-ci.org/gustavofranke/converter)
 ### Welcome!
 This program takes a string representing a match time in one format,
 and converts it to a string representing match time in another format.
