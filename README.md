@@ -10,9 +10,41 @@ and converts it to a string representing match time in another format.
 2. Some output indicates that the source files are compiled, and the tests run.
 3. Its last line should look like `[success] Total time: 6 s, completed 03-Jun-2020 01:09:36`
 
+### Releases
+1. All jars are released to the `releases` tab in this repository
+2. You can download the latest one [here](https://github.com/gustavofranke/converter/releases/download/v0.0.1/converter-assembly-0.1.jar)
+
 ### How run the jar
 1. From the projects root directory, run `java -jar target/scala-2.13/converter-assembly-0.1.jar "[PM] 0:00.000"`
 2. The result of running that command prints out `00:00 – PRE_MATCH`
+```$
+$ java -jar target/scala-2.13/converter-assembly-0.1.jar "[PM] 0:00.000";
+00:00 – PRE_MATCH
+$ java -jar target/scala-2.13/converter-assembly-0.1.jar "[H1] 0:15.025";
+00:15 – FIRST_HALF
+$ java -jar target/scala-2.13/converter-assembly-0.1.jar "[H1] 3:07.513";
+03:08 – FIRST_HALF
+$ java -jar target/scala-2.13/converter-assembly-0.1.jar "[H1] 45:00.001";
+45:00 +00:00 – FIRST_HALF
+$ java -jar target/scala-2.13/converter-assembly-0.1.jar "[H1] 46:15.752";
+45:00 +01:16 – FIRST_HALF
+$ java -jar target/scala-2.13/converter-assembly-0.1.jar "[HT] 45:00.000";
+45:00 – HALF_TIME
+$ java -jar target/scala-2.13/converter-assembly-0.1.jar "[H2] 45:00.500";
+45:01 – SECOND_HALF
+$ java -jar target/scala-2.13/converter-assembly-0.1.jar "[H2] 90:00.908";
+90:00 +00:01 – SECOND_HALF
+$ java -jar target/scala-2.13/converter-assembly-0.1.jar "[FT] 90:00.000";
+90:00 +00:00 – FULL_TIME
+$ java -jar target/scala-2.13/converter-assembly-0.1.jar "90:00";
+INVALID
+$ java -jar target/scala-2.13/converter-assembly-0.1.jar "[H3] 90:00.000";
+INVALID
+$ java -jar target/scala-2.13/converter-assembly-0.1.jar "[PM] -10:00.00";
+INVALID
+$ java -jar target/scala-2.13/converter-assembly-0.1.jar "FOO";
+INVALID
+```
 
 ### How to use it from sbt
 1. In a command line utility, open an sbt interactive session by typing `sbt` <enter>
