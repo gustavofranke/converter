@@ -54,12 +54,20 @@ class ConverterTestSuite extends AnyFunSuite {
   test("domain representations, error messages should be returned on invalid inputs") {
     val invalidSecondInt    = 67
     val invalidSecondString = "-67"
-    assert(Seconds(invalidSecondInt) === Left(Seconds.creationImpossible))
-    assert(Seconds(invalidSecondString) === Left(Seconds.creationImpossible))
-    assert(Minutes(invalidSecondString) === Left(Minutes.creationImpossible))
-    assert(Minutes("-167") === Left(Minutes.creationImpossible))
-    assert(MilliSeconds(invalidSecondString) === Left(MilliSeconds.creationImpossible))
-    assert(MilliSeconds("1000") === Left(MilliSeconds.creationImpossible))
+
+    val table = Table(
+      ("input", "output"),
+      (Seconds(invalidSecondInt), Left(Seconds.creationImpossible)),
+      (Seconds(invalidSecondString), Left(Seconds.creationImpossible)),
+      (Minutes(invalidSecondString), Left(Minutes.creationImpossible)),
+      (Minutes("-167"), Left(Minutes.creationImpossible)),
+      (MilliSeconds(invalidSecondString), Left(MilliSeconds.creationImpossible)),
+      (MilliSeconds("1000"), Left(MilliSeconds.creationImpossible))
+    )
+
+    forAll(table) { (input: Either[String, Product], output: Either[String, MatchTime]) =>
+      assert(input === output)
+    }
   }
 
   test("parseInt") {
@@ -68,8 +76,25 @@ class ConverterTestSuite extends AnyFunSuite {
     assert(parseInt("asdf").isLeft)
   }
 
-  test("overflowing Second creation when rounding from MilliSeconds, fails to create an instance ") {
+  test(
+    "overflowing Seconds.apply when rounding from MilliSeconds," +
+      " fails to create an instance of Second and the entire parsing fails"
+  ) {
     import cats.implicits._
     assert(MatchTime("PM", "0", "60", "501").show == Right(Invalid.invalid).toString)
+  }
+
+  test("Examples of MatchTime parsing failing due to one invalid input") {
+    val table = Table(
+      ("input", "output"),
+      (MatchTime("hello", "0", "60", "500"), Left("hello is an Unsupported Period Format")),
+      (MatchTime("PM", "121", "60", "500"), Left(Minutes.creationImpossible)),
+      (MatchTime("PM", "0", "61", "500"), Left(Seconds.creationImpossible)),
+      (MatchTime("PM", "0", "60", "1000"), Left(MilliSeconds.creationImpossible))
+    )
+
+    forAll(table) { (input: Either[String, MatchTime], output: Either[String, MatchTime]) =>
+      assert(input === output)
+    }
   }
 }
