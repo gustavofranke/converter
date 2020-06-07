@@ -97,4 +97,16 @@ class ConverterTestSuite extends AnyFunSuite {
       assert(input === output)
     }
   }
+
+  test("the copy method for Minutes, Seconds and MilliSeconds shouldn't be synthetically generated, " +
+    "so that copying an invalid value is not possible") {
+    assertDoesNotCompile("""Minutes("59").map(_.copy(s = "61"))""")
+    assertTypeError("""Minutes("59").map(_.copy(s = "61"))""")
+
+    assertDoesNotCompile("""Seconds("59").map(_.copy(s = "61"))""")
+    assertTypeError("""Seconds("59").map(_.copy(s = "61"))""")
+
+    assertDoesNotCompile("""MilliSeconds("559").map(_.copy(s = "61"))""")
+    assertTypeError("""MilliSeconds("559").map(_.copy(s = "61"))""")
+  }
 }
